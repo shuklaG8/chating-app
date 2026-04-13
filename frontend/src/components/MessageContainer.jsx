@@ -3,9 +3,9 @@ import SendInput from "./SendInput";
 import Messages from "./Messages";
 
 const MessageContainer = () => {
-  const { selectedUser, authUser } = useSelector((state) => state.user);
+  const { selectedUser, authUser, onlineUsers } = useSelector((state) => state.user);
 
-  const isOnline = true;
+  const isOnline = onlineUsers?.includes(selectedUser?._id);
 
   return (
     <>
@@ -13,13 +13,14 @@ const MessageContainer = () => {
         <div className="flex-1 flex flex-col bg-[#140a25]/50">
           {/* Header */}
           <div className="flex items-center gap-4 px-5 py-4 border-b border-pink-500/10 bg-[#1b0b2e]/80 backdrop-blur-xl">
-            <div className={`avatar ${isOnline ? "online" : ""}`}>
+            <div className="avatar relative">
               <div className="w-12 rounded-full overflow-hidden border border-pink-500/20">
                 <img
                   src={selectedUser?.profilePhoto}
                   alt="user-profile"
                 />
               </div>
+              <span className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-[#1b0b2e] ${isOnline ? 'bg-green-500 shadow-[0_0_5px_#22c55e]' : 'bg-gray-500'}`}></span>
             </div>
 
             <div className="flex flex-col">

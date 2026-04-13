@@ -11,12 +11,31 @@ import {
     PURGE,
     REGISTER,
   } from 'redux-persist';
-  import storage from 'redux-persist/lib/storage'
+const createNoopStorage = () => {
+    return {
+      getItem(_key) {
+        return Promise.resolve(null);
+      },
+      setItem(_key, value) {
+        return Promise.resolve(value);
+      },
+      removeItem(_key) {
+        return Promise.resolve();
+      },
+    };
+  };
+
+  const storage = typeof window !== "undefined" ? {
+    getItem: (key) => Promise.resolve(window.localStorage.getItem(key)),
+    setItem: (key, value) => Promise.resolve(window.localStorage.setItem(key, value)),
+    removeItem: (key) => Promise.resolve(window.localStorage.removeItem(key)),
+  } : createNoopStorage();
 
   const persistConfig = {
     key: 'root',
     version: 1,
     storage,
+    blacklist: ['socket'],
   }
 
   const rootReducer = combineReducers({
@@ -27,14 +46,12 @@ import {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-
 const store = configureStore({
     reducer:persistedReducer,
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
+      serializableCheck: false,
+      immutableCheck: false,
     }),
 });
 export default store;

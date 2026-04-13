@@ -21,10 +21,11 @@ const OtherUser = ({ user }) => {
             : "bg-[#24123d]/70 border-pink-500/10 hover:bg-[#2f184d]"
         }`}
       >
-        <div className={`avatar ${isOnline ? "online" : "offline"}`}>
+        <div className="avatar relative">
           <div className="w-12 rounded-full overflow-hidden border border-pink-400/30">
             <img src={user?.profilePhoto} alt="user-profile" />
           </div>
+          <span className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-[#140a25] ${isOnline ? 'bg-green-500 shadow-[0_0_5px_#22c55e]' : 'bg-gray-500'}`}></span>
         </div>
 
         <div className="flex flex-col flex-1">

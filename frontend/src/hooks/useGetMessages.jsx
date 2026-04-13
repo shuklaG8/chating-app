@@ -11,14 +11,15 @@ const useGetMessages = () => {
         const fetchMessages = async () => {
             try {
                 axios.defaults.withCredentials = true;
-                const res = await axios.get(`http://localhost:8000/api/v1/messages/${selectedUser?._id}`);
+                const res = await axios.get(`http://localhost:8000/api/v1/message/${selectedUser?._id}`);
                 dispatch(setMessages(res.data.messages));
             } catch (error) {
                 console.log(error);
             }
         };
-
-        fetchMessages();
+        if (selectedUser?._id) {
+            fetchMessages();
+        }
     }, [selectedUser?._id, dispatch]);
 };
 
