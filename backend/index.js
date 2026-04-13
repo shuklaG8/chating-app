@@ -16,8 +16,8 @@ app.use(cors({
 // routes
 import userRoute from './routes/userRoute.js';
 import messageRoute from './routes/messageRoute.js';
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: "15mb" }));
+app.use(express.json({ limit: "15mb" }));
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/message", messageRoute);
 

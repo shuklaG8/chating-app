@@ -10,7 +10,19 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
     gender: "",
+    profilePhoto: "",
   });
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setUser((prev) => ({ ...prev, profilePhoto: reader.result }));
+      };
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -39,6 +51,7 @@ const Signup = () => {
       password: "",
       confirmPassword: "",
       gender: "",
+      profilePhoto: "",
     })
   };
 
@@ -132,6 +145,18 @@ const Signup = () => {
               />
               Female
             </label>
+          </div>
+
+          <div className="mb-5">
+            <label className="block text-pink-100 mb-2 font-medium">
+              Profile Photo <span className="text-sm font-normal text-pink-200/50">(Optional)</span>
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full text-pink-100 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-pink-600 file:text-white hover:file:bg-pink-700 transition cursor-pointer border border-pink-400/20 bg-[#2b1646]/80 rounded-xl"
+            />
           </div>
 
           <p className="text-center text-gray-300 mb-5">
