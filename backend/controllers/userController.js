@@ -106,3 +106,32 @@ export const getOtherUsers = async (req, res) => {
     res.status(500).json({ message: "Error fetching other users" });
   }
 };
+
+// Update User Profile
+export const updateProfile = async (req, res) => {
+  try {
+    const loggedInUserId = req.id;
+    const { fullName, profilePhoto } = req.body;
+
+    const user = await User.findById(loggedInUserId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (fullName) user.fullName = fullName;
+    if (profilePhoto) user.profilePhoto = profilePhoto;
+
+    await user.save();
+
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      username: user.username,
+      profilePhoto: user.profilePhoto,
+      message: "Profile updated successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error updating profile" });
+  }
+};

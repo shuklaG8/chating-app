@@ -14,7 +14,7 @@ const SendInput = () => {
     e.preventDefault();
     // Handle message submission logic here
     try {
-      const res = await axios.post(`http://localhost:8000/api/v1/message/send/${selectedUser?._id}`,{message}, {
+      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/message/send/${selectedUser?._id}`,{message}, {
         headers: {
           "Content-Type": "application/json",
         },

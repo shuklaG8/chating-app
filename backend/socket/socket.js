@@ -15,21 +15,31 @@ export const getReceiverSocketId = (receiverId) => {
   return userSocketMap[receiverId];
 }
 
+import { User } from "../models/userModel.js";
+
 const userSocketMap = {};
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   console.log("a user connected");
 
   const userId = socket.handshake.query.userId;
   if (userId !== undefined) {
     userSocketMap[userId] = socket.id;
+    // Optionally update lastSeen to 'online' state or just leave it
   }
 
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", async () => {
     console.log("user disconnected", socket.id);
-    delete userSocketMap[userId];
+    if (userId) {
+      delete userSocketMap[userId];
+      try {
+        await User.findByIdAndUpdate(userId, { lastSeen: Date.now() });
+      } catch (error) {
+        console.error("Error updating lastSeen on disconnect:", error);
+      }
+    }
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });

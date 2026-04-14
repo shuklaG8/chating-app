@@ -7,6 +7,24 @@ const MessageContainer = () => {
 
   const isOnline = onlineUsers?.includes(selectedUser?._id);
 
+  const formatLastSeen = (user) => {
+    const dateStr = user?.lastSeen || user?.updatedAt;
+    if (!dateStr) return "Offline";
+    
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffInMs = now - date;
+    const diffInMins = Math.floor(diffInMs / 60000);
+    const diffInHours = Math.floor(diffInMins / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInMins < 1) return "Last seen just now";
+    if (diffInMins < 60) return `Last seen ${diffInMins} min ago`;
+    if (diffInHours < 24) return `Last seen ${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+    if (diffInDays === 1) return `Last seen yesterday at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    return `Last seen on ${date.toLocaleDateString()}`;
+  };
+
   return (
     <>
       {selectedUser ? (
@@ -28,7 +46,7 @@ const MessageContainer = () => {
                 {selectedUser?.fullName}
               </p>
               <span className="text-sm text-pink-200/50">
-                {isOnline ? "Online" : "Offline"}
+                {isOnline ? "Online" : formatLastSeen(selectedUser)}
               </span>
             </div>
           </div>

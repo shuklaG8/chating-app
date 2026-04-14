@@ -31,7 +31,7 @@ const App = () => {
 
   useEffect(() => {
     if(authUser) {
-      const socketio = io('http://localhost:8000', {
+      const socketio = io(`${import.meta.env.VITE_BASE_URL}`, {
         query: {
           userId: authUser._id
         }
